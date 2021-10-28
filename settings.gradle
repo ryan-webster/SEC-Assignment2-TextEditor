@@ -1,0 +1,5 @@
+rootProject.name = 'Assignment2'
+include 'java_app'
+include 'program_api'
+include 'date_plugin'
+include 'find_plugin'

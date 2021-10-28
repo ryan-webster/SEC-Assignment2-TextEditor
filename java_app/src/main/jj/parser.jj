@@ -1,0 +1,63 @@
+PARSER_BEGIN(MyParser)
+package edu.curtin.parser;
+
+import java.io.*;
+import java.util.*;
+import edu.curtin.secassignment2.KeyCombination;
+
+public class MyParser { }
+PARSER_END(MyParser)
+
+SKIP : { " " | "\r" | "\t" }
+
+TOKEN : {
+    < KEYPRESS : ( "alt" | "shift" | "ctrl" ) > |
+    < PLUS: "+" > |
+    < EQUALS: "=" > |
+    < INSERTORDEL : ( "insert" | "delete" ) > |
+    < NEWLINE: "\n" > |
+    < AT: "at" > |
+    < LINELOC: ( "caret" | "start of line" ) > |
+    < KEY : ["a"-"z"] > |
+    < TEXT : "\""  (~["\""])* "\"" >
+    }
+
+ArrayList<KeyCombination> dsl() :
+{
+    ArrayList<KeyCombination> keys = new ArrayList<KeyCombination>();
+    Set<String> keySet = new HashSet<String>();
+    Token modkey = null;
+    Token key = null;
+    Token text= null;
+    Token location = null;
+    Token insOrDel = null;
+}
+{
+    (
+        ( modkey = <KEYPRESS>
+        {
+            keySet.add(modkey.image); //Not added to set if not unique
+        } <PLUS> )+
+        key = <KEY>
+        <EQUALS>
+        insOrDel = <INSERTORDEL>
+        text = <TEXT>
+        <AT>
+        location = <LINELOC>
+        ( <NEWLINE> | <EOF> )
+        {
+            Boolean ctrl = keySet.contains("ctrl");
+            Boolean alt = keySet.contains("alt");
+            Boolean shift = keySet.contains("shift");
+            Boolean insert = true;
+            insert = insOrDel.image.equals("insert");
+            keys.add(new KeyCombination(ctrl, shift, alt, key.image,
+                insert, text.image.replace("\"", ""), location.image));
+            keySet.clear();
+        }
+    )+
+    <EOF>
+    {
+       return keys;
+    }
+}

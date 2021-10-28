@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'com.intershop.gradle.javacc' version '4.0.1'
+}
+
+dependencies {
+    implementation project (':program_api')
+    implementation project (':date_plugin')
+    implementation project (':find_plugin')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation 'org.python:jython-standalone:2.7.1'
+}
+
+application {
+    mainClass.set 'edu.curtin.secassignment2.TextEditor'
+}
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    modules = [ 'javafx.controls' ]
+}
+
+
+run {
+    // Allow standard input
+    standardInput = System.in
+}
+
+javacc {
+    configs {
+        createmyparser {
+            inputFile = file('src/main/jj/parser.jj')
+            packageName = 'edu.curtin.parser'
+            // lookahead = '2'
+        }
+    }
+}
+

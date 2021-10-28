@@ -1,0 +1,10 @@
+# Project exclude paths
+/.gradle/
+/date_plugin/build/
+/date_plugin/build/classes/java/main/
+/find_plugin/build/
+/find_plugin/build/classes/java/main/
+/java_app/build/
+/java_app/build/classes/java/main/
+/program_api/build/
+/program_api/build/classes/java/main/
